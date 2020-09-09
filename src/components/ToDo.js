@@ -1,11 +1,13 @@
 import React, { Component } from 'react';
-
+import List from './List';
 
 class ToDo extends Component {
 
   state = {
-    hello: 'hey',
+    categoryList: ['Coding','Sports','Food','Extra','All'],
     singleTodo: '',
+    todoChosenCategory: 'Coding',
+    filteredCategory: 'All',
     listOfToDos: []
   }
 
@@ -15,19 +17,49 @@ class ToDo extends Component {
     })
   }
 
+  handleCategory = event => {
+    this.setState({
+      todoChosenCategory: event.target.value
+    })
+  }
+
   addTodo = event => {
     event.preventDefault();
-    // console.log(this.state.singleTodo)
-    // let currentToDo = this.state.singleTodo
-    // let newListOfToDos = this.state.listOfToDos
-    // newListOfToDos.push(currentToDo)
+
+    let todoWithCategory = {
+      todo: this.state.singleTodo,
+      category: this.state.todoChosenCategory
+    }
+
     this.setState({
       singleTodo: '',
-      listOfToDos: [...this.state.listOfToDos, this.state.singleTodo]
+      listOfToDos: [...this.state.listOfToDos, todoWithCategory]
+    })
+  }
+
+  deleteToDo = event => {
+    let copyToDos = [...this.state.listOfToDos]
+    copyToDos.splice(event.target.id, 1)
+    this.setState({
+      listOfToDos: copyToDos
+    })
+  }
+
+  selectFilter = event => {
+    this.setState({
+      filteredCategory: event.target.innerText
     })
   }
 
   render() {
+    let filteredCategories = this.state.listOfToDos.filter(todo => (
+      todo.category === this.state.filteredCategory
+    ));
+
+    let filteredTodos = this.state.filteredCategory === 'All'
+      ? this.state.listOfToDos
+      : filteredCategories
+
     return (
       <div>
         <h2>{this.props.title}</h2>
@@ -38,17 +70,34 @@ class ToDo extends Component {
             onChange={this.writeToDo}
             placeholder='Write a ToDo...'
           />
+          <select onChange={this.handleCategory}>
+            <option value="Coding">Coding</option>
+            <option value="Sports">Sports</option>
+            <option value="Food">Food</option>
+            <option value="Extra">Extra</option>
+          </select>
           <button>Add to the list</button>
         </form>
         {
           this.state.listOfToDos.length > 0
             ?
-            <div>
-              {
-                this.state.listOfToDos.map((todo, index) =>
-                  <p key={index}>- You have to {todo} <button>Delete</button></p>
-                )
-              }
+            <div className="flex-it">
+              <div className="todos-container">
+                {
+                  filteredTodos.length > 0
+                  ? <List listArray={filteredTodos} deleteToDo={this.deleteToDo} />
+                  : <p>You have no tasks related to: {this.state.filteredCategory}</p>
+                }
+              </div>
+              <div className="filter-container">
+                <h1>Filter it</h1>
+                <hr />
+                {
+                  this.state.categoryList.map((category, index) =>(
+                    <p key={index} onClick={this.selectFilter} className="filter-text">{category}</p>
+                  ))
+                }
+              </div>
             </div>
             : <h3>You have nothing to do</h3>
         }
@@ -56,5 +105,7 @@ class ToDo extends Component {
     );
   }
 }
+
+
 
 export default ToDo;

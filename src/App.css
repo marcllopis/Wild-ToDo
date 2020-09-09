@@ -44,7 +44,46 @@
 	top:1px;
 }
 
+.flex-it {
+  display: flex;
+  justify-content: center;
+}
 
+.filter-container {
+  margin-top: 40px;
+  padding: 10px;
+  min-width: 20%;
+  border: 1px solid #057fd0;
+  border-radius: 10px;
+}
+
+.filter-text {
+  text-align: left;
+  margin-left: 10px;
+  font-style: italic;
+  font-weight: bold;
+  font-size: 25px;
+}
+
+.filter-text:hover {
+  background-color: #84bbf3;
+  cursor: pointer;
+}
+
+.todos-container {
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+  margin-top: 30px;
+  min-width: 60%;
+}
+
+.category{
+  font-style: italic;
+  font-size: 18px;
+  color: lightseagreen;
+  font-weight: 800;
+}
 
 
 .App {
